@@ -76,26 +76,28 @@ const BadCaseList: React.FC = () => {
                         {!!d.daily_status && (
                           <NavLink to={`/question/detail/${d.id}?type=daily`} target="_blank" className="no-underline">
                             <Anchor component="span">
-                              <IconExternalLink size={16} />
+                              <IconExternalLink className="align-sub	" size={16} />
                             </Anchor>
                           </NavLink>
                         )}
                       </Group>
                     </td>
                     <td>
-                      <Badge
-                        variant="dot"
-                        color={!d.manual_status ? 'gray' : d.manual_status === 'success' ? 'green' : 'red'}
-                      >
-                        {d.manual_status || 'NA'}
-                      </Badge>
-                      {!!d.manual_status && (
-                        <NavLink to={`/question/detail/${d.id}?type=manual`} target="_blank" className="no-underline">
-                          <Anchor component="span">
-                            <IconExternalLink size={16} />
-                          </Anchor>
-                        </NavLink>
-                      )}
+                      <Group spacing={4}>
+                        <Badge
+                          variant="dot"
+                          color={!d.manual_status ? 'gray' : d.manual_status === 'success' ? 'green' : 'red'}
+                        >
+                          {d.manual_status || 'NA'}
+                        </Badge>
+                        {!!d.manual_status && (
+                          <NavLink to={`/question/detail/${d.id}?type=manual`} target="_blank" className="no-underline">
+                            <Anchor component="span">
+                              <IconExternalLink className="align-sub" size={16} />
+                            </Anchor>
+                          </NavLink>
+                        )}
+                      </Group>
                     </td>
                     <td>{d.daily_model || d.manual_model}</td>
                   </tr>
