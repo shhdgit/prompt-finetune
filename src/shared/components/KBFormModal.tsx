@@ -16,7 +16,7 @@ export const useKBForm = (initialValues: Partial<FormValue>) => {
   })
 }
 
-export const openKBFormModal = (mode: FormMode, form: KBForm, onChange?: (v: any) => void, onClose?: () => void) => {
+export const openKBFormModal = (mode: FormMode, form: KBForm, onClose?: () => void) => {
   const isAddMode = mode === 'add'
   modals.open({
     title: `${isAddMode ? 'Add' : 'Edit'} Knowledge Base`,
@@ -24,7 +24,6 @@ export const openKBFormModal = (mode: FormMode, form: KBForm, onChange?: (v: any
       <KBForm
         mode={mode}
         form={form}
-        onChange={onChange}
         onClose={() => {
           modals.closeAll()
           onClose?.()
@@ -67,12 +66,7 @@ const FORMS = {
   [CategoryValue.Example]: ExampleForm
 }
 
-const KBForm: React.FC<{ mode: FormMode; form: KBForm; onChange?: (v: any) => void; onClose?: () => void }> = ({
-  mode,
-  form,
-  onChange,
-  onClose
-}) => {
+const KBForm: React.FC<{ mode: FormMode; form: KBForm; onClose?: () => void }> = ({ mode, form, onClose }) => {
   const isAddMode = mode === 'add'
   const [category, setCategory] = useState<CategoryValue>(form.values.category || CategoryValue.Entity)
   const Form = FORMS[category]
@@ -115,11 +109,6 @@ const KBForm: React.FC<{ mode: FormMode; form: KBForm; onChange?: (v: any) => vo
               if (res.data.status !== 'success') {
                 return
               }
-              onChange?.(
-                category === CategoryValue.Entity
-                  ? { name: res.data.name, desc: res.data.desc }
-                  : { Q: res.data.Q, A: res.data.A }
-              )
             } finally {
               setLoading(false)
             }

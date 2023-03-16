@@ -1,4 +1,4 @@
-import { Anchor, Button, Card, Group, Stack, Text, Title } from '@mantine/core'
+import { Anchor, Button, Card, Group, Stack, Table, Text, Title } from '@mantine/core'
 import { Prism } from '@mantine/prism'
 import { useState } from 'react'
 import { EntityFormValue, ExampleFormValue } from '../../../shared/api'
@@ -14,52 +14,127 @@ const PromptEditCard: React.FC<{
   columns: Column[]
   entities: EntityFormValue[]
   examples: ExampleFormValue[]
-  onAdd: () => void
-}> = ({ columns, entities, examples, onAdd }) => {
+}> = ({ columns, entities, examples }) => {
   const form = useKBForm({
     category: CategoryValue.Entity
   })
   return (
     <Card>
       <Group position="apart">
-        <Text fz={14} c="gray">
+        <Text fz={14} c="gray" mb="xs">
           Knowledge Base used in Prompt
         </Text>
-        <Button variant="light" onClick={() => openKBFormModal('add', form, onAdd, () => form.reset())}>
+        <Button variant="light" onClick={() => openKBFormModal('add', form, () => form.reset())}>
           Add
         </Button>
       </Group>
       <Stack>
         <Stack spacing="sm">
           <Title order={6}>Description</Title>
-          <Stack spacing="xs">
-            {columns.map((c, i) => (
-              <CodeWithEdit key={i} data={c} />
-            ))}
-          </Stack>
+          <DescriptionTable data={columns} />
         </Stack>
         <Stack spacing="sm">
           <Title order={6}>Common Sense</Title>
-          <Stack spacing="xs">
-            {entities.map((e, i) => (
-              <CodeWithEdit key={i} editable data={e} category={CategoryValue.Entity} />
-            ))}
-          </Stack>
+          <EntityTable data={entities} />
         </Stack>
         <Stack spacing="sm">
           <Title order={6}>Example</Title>
-          <Stack spacing="xs">
-            {examples.map((e, i) => (
-              <CodeWithEdit key={i} editable data={e} category={CategoryValue.Example} />
-            ))}
-          </Stack>
+          <ExampleTable data={examples} />
         </Stack>
       </Stack>
     </Card>
   )
 }
 
-const CodeWithEdit: React.FC<{
+const DescriptionTable: React.FC<{ data: Column[] }> = ({ data }) => {
+  return (
+    <Table>
+      <thead>
+        <tr>
+          <th>Table</th>
+          <th>Column</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((element, i) => (
+          <tr key={i}>
+            <td>{element.table}</td>
+            <td>{element.column}</td>
+            <td>{element.desc}</td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+  )
+}
+
+const EntityTable: React.FC<{ data: EntityFormValue[] }> = ({ data }) => {
+  return (
+    <Table>
+      <thead>
+        <tr>
+          <th>Entity</th>
+          <th>Content</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((element, i) => (
+          <tr key={i}>
+            <td>{element.name}</td>
+            <td>{element.desc}</td>
+            <td>
+              <EditAction category={CategoryValue.Entity} data={element} />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+  )
+}
+
+const ExampleTable: React.FC<{ data: ExampleFormValue[] }> = ({ data }) => {
+  return (
+    <Table>
+      <thead>
+        <tr>
+          <th>Question</th>
+          <th>Answer</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((element, i) => (
+          <tr key={i}>
+            <td>{element.Q}</td>
+            <td>{element.A}</td>
+            <td>
+              <EditAction category={CategoryValue.Example} data={element} />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+  )
+}
+
+const EditAction: React.FC<{ category: CategoryValue; data: Column | ExampleFormValue | EntityFormValue }> = ({
+  category,
+  data
+}) => {
+  const form = useKBForm({
+    category,
+    ...data
+  })
+  return (
+    <Anchor fz={14} onClick={() => openKBFormModal('edit', form)}>
+      Edit
+    </Anchor>
+  )
+}
+
+export const CodeWithEdit: React.FC<{
   editable?: boolean
   category?: CategoryValue
   data: Column | ExampleFormValue | EntityFormValue
@@ -68,11 +143,7 @@ const CodeWithEdit: React.FC<{
     category,
     ...data
   })
-  const [displayedData, setDisplayedData] = useState(data)
-  const updateData = (v: any) => {
-    setDisplayedData(v)
-    form.setValues(v)
-  }
+  const [displayedData] = useState(data)
 
   return (
     <div className="relative">
@@ -80,7 +151,7 @@ const CodeWithEdit: React.FC<{
         {JSON.stringify(displayedData, null, '  ')}
       </Prism>
       {!!editable && (
-        <Anchor className="absolute top-2 right-2" fz={14} onClick={() => openKBFormModal('edit', form, updateData)}>
+        <Anchor className="absolute top-2 right-2" fz={14} onClick={() => openKBFormModal('edit', form)}>
           Edit
         </Anchor>
       )}

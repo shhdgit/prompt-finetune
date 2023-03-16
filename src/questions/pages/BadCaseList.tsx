@@ -3,10 +3,13 @@ import { Alert, Anchor, Badge, Card, Group, ScrollArea, Skeleton, Stack, Table, 
 import { DatePickerInput } from '@mantine/dates'
 import { IconAlertCircle, IconExternalLink } from '@tabler/icons-react'
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { PropsWithChildren, useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { NavLink } from 'react-router-dom'
 import { getQuestionList } from '../api'
+
+dayjs.extend(utc)
 
 const yesterday = new Date()
 yesterday.setDate(yesterday.getDate() - 1)
@@ -57,7 +60,7 @@ const BadCaseList: React.FC = () => {
               {!isLoading ? (
                 badCaseData.map((d: any) => (
                   <tr key={d.id}>
-                    <td>{dayjs(d.created_at).format('YYYY-MM-DD hh:mm:ss')}</td>
+                    <td>{dayjs(d.created_at).utc().format('YYYY-MM-DD hh:mm:ss')}</td>
                     <td>
                       <TextEllipsis>{d.title}</TextEllipsis>
                     </td>

@@ -30,14 +30,7 @@ const AppLayout: React.FC = () => {
               <Button
                 leftIcon={<IconFilePlus size={18} />}
                 variant="light"
-                onClick={() =>
-                  openKBFormModal(
-                    'add',
-                    form,
-                    () => {},
-                    () => form.reset()
-                  )
-                }
+                onClick={() => openKBFormModal('add', form, () => form.reset())}
               >
                 Add Knowledge Base
               </Button>

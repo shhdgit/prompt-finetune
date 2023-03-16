@@ -4,13 +4,15 @@ import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useSearchParams } from 'react-router-dom'
 import { executeQuestion, getQuestion } from '../../api'
-import PromptEditCard from './PromptEditCard'
+import PromptEditCard, { CodeWithEdit } from './PromptEditCard'
 
 const Detail: React.FC = () => {
   const [searchParams] = useSearchParams()
   const id = searchParams.get('id')
   const type = (searchParams.get('type') || 'daily') as 'daily' | 'manual'
-  const { data, isLoading, refetch } = useQuery(['question', id], () => getQuestion(id!))
+  const { data, isLoading } = useQuery(['question', id], () => getQuestion(id!), {
+    refetchOnWindowFocus: false
+  })
   const d = data?.data
   const columns = useMemo(() => d && parseJSON(type === 'daily' ? d.daily_columns : d.manual_columns), [d])
   const examples = useMemo(() => d && parseJSON(type === 'daily' ? d.daily_examples : d.manual_examples), [d])
@@ -48,43 +50,44 @@ const Detail: React.FC = () => {
                 }
               }}
               loading={testing}
+              variant="default"
             >
               Test with KB
             </Button>
           </Group>
 
           <Card>
-            <Text fz={14} c="gray">
+            <Text fz={14} c="gray" mb="xs">
               Revised Question
             </Text>
             <Text fz={16}>{d.revised_title}</Text>
           </Card>
 
           <Card>
-            <Text fz={14} c="gray">
+            <Text fz={14} c="gray" mb="xs">
               SQL
             </Text>
             <Text fz={16}>{type === 'daily' ? d.daily_query_sql : d.manual_query_sql || 'null'}</Text>
           </Card>
 
           <Card>
-            <Text fz={14} c="gray">
+            <Text fz={14} c="gray" mb="xs">
               Result
             </Text>
-            <Text fz={16}>{type === 'daily' ? d.daily_result : d.manual_result || 'null'}</Text>
+            <CodeWithEdit data={parseJSON(type === 'daily' ? d.daily_result : d.manual_result || 'null')} />
           </Card>
 
           <Card>
-            <Text fz={14} c="gray">
+            <Text fz={14} c="gray" mb="xs">
               Error Message
             </Text>
             <Text fz={16}>{type === 'daily' ? d.daily_error : d.manual_error || 'null'}</Text>
           </Card>
 
-          <PromptEditCard columns={columns} entities={entities} examples={examples} onAdd={refetch} />
+          <PromptEditCard columns={columns} entities={entities} examples={examples} />
 
           <Card>
-            <Text fz={14} c="gray">
+            <Text fz={14} c="gray" mb="xs">
               Complete Prompt
             </Text>
             <Text fz={16} className="whitespace-pre-line">
@@ -100,6 +103,13 @@ const Detail: React.FC = () => {
                 </Tooltip>
               )}
             </CopyButton>
+          </Card>
+
+          <Card>
+            <Text fz={14} c="gray" mb="xs">
+              Model Response
+            </Text>
+            <CodeWithEdit data={parseJSON(type === 'daily' ? d.daily_answer : d.manual_answer)} />
           </Card>
         </>
       )}
