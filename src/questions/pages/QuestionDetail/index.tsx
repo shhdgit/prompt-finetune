@@ -2,14 +2,13 @@ import { ActionIcon, Button, Card, CopyButton, Group, Skeleton, Stack, Text, Too
 import { IconCheck, IconCopy } from '@tabler/icons-react'
 import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
-import { useLocation, useParams, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { executeQuestion, getQuestion } from '../../api'
 import PromptEditCard from './PromptEditCard'
 
 const Detail: React.FC = () => {
-  const location = useLocation()
-  const { id } = useParams()
   const [searchParams] = useSearchParams()
+  const id = searchParams.get('id')
   const type = (searchParams.get('type') || 'daily') as 'daily' | 'manual'
   const { data, isLoading, refetch } = useQuery(['question', id], () => getQuestion(id!))
   const d = data?.data
@@ -41,7 +40,7 @@ const Detail: React.FC = () => {
                 setTesting(true)
                 try {
                   const res = await executeQuestion(id!)
-                  window.open(`${window.location.origin}/question/detail/${res.data.id}?type=manual`)
+                  window.open(`${window.location.origin}/question/detail?id=${res.data.id}&type=manual`)
                 } finally {
                   setTesting(false)
                 }

@@ -14,7 +14,7 @@ const App: React.FC = () => {
         <Route path="overview" element={<Overview />} />
         <Route path="question">
           <Route path="badcase" element={<BadCaseList />} />
-          <Route path="detail/:id" element={<QuestionDetail />} />
+          <Route path="detail" element={<QuestionDetail />} />
         </Route>
 
         <Route path="*" element={<NoMatch />} />

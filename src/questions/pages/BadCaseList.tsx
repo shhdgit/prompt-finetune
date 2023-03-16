@@ -74,7 +74,11 @@ const BadCaseList: React.FC = () => {
                           {d.daily_status || 'NA'}
                         </Badge>
                         {!!d.daily_status && (
-                          <NavLink to={`/question/detail/${d.id}?type=daily`} target="_blank" className="no-underline">
+                          <NavLink
+                            to={`/question/detail?id=${d.id}&type=daily`}
+                            target="_blank"
+                            className="no-underline"
+                          >
                             <Anchor component="span">
                               <IconExternalLink className="align-sub	" size={16} />
                             </Anchor>
@@ -91,7 +95,11 @@ const BadCaseList: React.FC = () => {
                           {d.manual_status || 'NA'}
                         </Badge>
                         {!!d.manual_status && (
-                          <NavLink to={`/question/detail/${d.id}?type=manual`} target="_blank" className="no-underline">
+                          <NavLink
+                            to={`/question/detail?id=${d.id}&type=manual`}
+                            target="_blank"
+                            className="no-underline"
+                          >
                             <Anchor component="span">
                               <IconExternalLink className="align-sub" size={16} />
                             </Anchor>
