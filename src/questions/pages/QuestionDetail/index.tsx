@@ -40,7 +40,9 @@ const Detail: React.FC = () => {
                 setTesting(true)
                 try {
                   const res = await executeQuestion(id!)
-                  window.open(`${window.location.origin}/#/question/detail?id=${res.data.id}&type=manual`)
+                  window.open(
+                    `${window.location.origin}/#/question/detail?id=${encodeURIComponent(res.data.id)}&type=manual`
+                  )
                 } finally {
                   setTesting(false)
                 }
@@ -62,21 +64,21 @@ const Detail: React.FC = () => {
             <Text fz={14} c="gray">
               SQL
             </Text>
-            <Text fz={16}>{d.query_sql || 'N/A'}</Text>
+            <Text fz={16}>{type === 'daily' ? d.daily_query_sql : d.manual_query_sql || 'null'}</Text>
           </Card>
 
           <Card>
             <Text fz={14} c="gray">
               Result
             </Text>
-            <Text fz={16}>{d.result || 'N/A'}</Text>
+            <Text fz={16}>{type === 'daily' ? d.daily_result : d.manual_result || 'null'}</Text>
           </Card>
 
           <Card>
             <Text fz={14} c="gray">
               Error Message
             </Text>
-            <Text fz={16}>{d.error || 'N/A'}</Text>
+            <Text fz={16}>{type === 'daily' ? d.daily_error : d.manual_error || 'null'}</Text>
           </Card>
 
           <PromptEditCard columns={columns} entities={entities} examples={examples} onAdd={refetch} />

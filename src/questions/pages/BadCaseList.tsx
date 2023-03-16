@@ -75,7 +75,7 @@ const BadCaseList: React.FC = () => {
                         </Badge>
                         {!!d.daily_status && (
                           <NavLink
-                            to={`/question/detail?id=${d.id}&type=daily`}
+                            to={`/question/detail?id=${encodeURIComponent(d.id)}&type=daily`}
                             target="_blank"
                             className="no-underline"
                           >
@@ -96,7 +96,7 @@ const BadCaseList: React.FC = () => {
                         </Badge>
                         {!!d.manual_status && (
                           <NavLink
-                            to={`/question/detail?id=${d.id}&type=manual`}
+                            to={`/question/detail?id=${encodeURIComponent(d.id)}&type=manual`}
                             target="_blank"
                             className="no-underline"
                           >
