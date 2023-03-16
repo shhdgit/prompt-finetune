@@ -1,11 +1,12 @@
 import { AppShell, Button, Group, Header, MantineProvider, Navbar, Title } from '@mantine/core'
 import { IconFilePlus } from '@tabler/icons-react'
 import { Outlet } from 'react-router-dom'
-import { openKBFormModal } from '../KBFormModal'
+import { CategoryValue, openKBFormModal, useKBForm } from '../KBFormModal'
 import ClusterSelect from './ClusterSelect'
 import Navs from './Navs'
 
 const AppLayout: React.FC = () => {
+  const form = useKBForm({ category: CategoryValue.Entity })
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <AppShell
@@ -26,7 +27,18 @@ const AppLayout: React.FC = () => {
                 </Title>
                 <ClusterSelect />
               </Group>
-              <Button leftIcon={<IconFilePlus size={18} />} variant="light" onClick={() => openKBFormModal('add')}>
+              <Button
+                leftIcon={<IconFilePlus size={18} />}
+                variant="light"
+                onClick={() =>
+                  openKBFormModal(
+                    'add',
+                    form,
+                    () => {},
+                    () => form.reset()
+                  )
+                }
+              >
                 Add Knowledge Base
               </Button>
             </Group>

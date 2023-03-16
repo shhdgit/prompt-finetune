@@ -6,7 +6,9 @@ import {
   ScaleType,
   Settings,
   timeFormatter,
-  niceTimeFormatByDay
+  niceTimeFormatByDay,
+  Tooltip,
+  LineAnnotation
 } from '@elastic/charts'
 
 const CaseCountChart: React.FC<{ data: { error: number; time: number; total: number }[] }> = ({ data }) => {
@@ -17,6 +19,7 @@ const CaseCountChart: React.FC<{ data: { error: number; time: number; total: num
     // @ts-ignore
     <Chart size={{ height: 300 }}>
       <Settings showLegend showLegendExtra legendPosition={Position.Right} legendSize={100} />
+      <Tooltip stickTo="MousePosition" />
       <Axis
         id="bottom"
         position={Position.Bottom}
@@ -27,7 +30,7 @@ const CaseCountChart: React.FC<{ data: { error: number; time: number; total: num
       <LineSeries
         id="error"
         name="Error"
-        xScaleType={ScaleType.Linear}
+        xScaleType={ScaleType.Time}
         yScaleType={ScaleType.Linear}
         xAccessor={0}
         yAccessors={[1]}
@@ -36,7 +39,7 @@ const CaseCountChart: React.FC<{ data: { error: number; time: number; total: num
       <LineSeries
         id="total"
         name="Total"
-        xScaleType={ScaleType.Linear}
+        xScaleType={ScaleType.Time}
         yScaleType={ScaleType.Linear}
         xAccessor={0}
         yAccessors={[1]}
