@@ -40,7 +40,7 @@ const Detail: React.FC = () => {
                 setTesting(true)
                 try {
                   const res = await executeQuestion(id!)
-                  window.open(`${window.location.origin}/question/detail?id=${res.data.id}&type=manual`)
+                  window.open(`${window.location.origin}/#/question/detail?id=${res.data.id}&type=manual`)
                 } finally {
                   setTesting(false)
                 }
