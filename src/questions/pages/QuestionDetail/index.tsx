@@ -1,4 +1,5 @@
-import { Button, Card, Group, Skeleton, Stack, Text, Tooltip } from '@mantine/core'
+import { ActionIcon, Button, Card, CopyButton, Group, Skeleton, Stack, Text, Tooltip } from '@mantine/core'
+import { IconCheck, IconCopy } from '@tabler/icons-react'
 import { useMemo, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation, useParams, useSearchParams } from 'react-router-dom'
@@ -88,6 +89,16 @@ const Detail: React.FC = () => {
             <Text fz={16} className="whitespace-pre-line">
               {type === 'daily' ? d.daily_prompt : d.manual_prompt}
             </Text>
+
+            <CopyButton value={type === 'daily' ? d.daily_prompt : d.manual_prompt} timeout={2000}>
+              {({ copied, copy }) => (
+                <Tooltip label={copied ? 'Copied' : 'Copy'} withArrow position="right">
+                  <ActionIcon className="absolute top-2 right-2" color={copied ? 'teal' : 'gray'} onClick={copy}>
+                    {copied ? <IconCheck size="1rem" /> : <IconCopy size="1rem" />}
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </CopyButton>
           </Card>
         </>
       )}
