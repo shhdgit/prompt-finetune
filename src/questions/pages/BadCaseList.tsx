@@ -66,7 +66,7 @@ const BadCaseList: React.FC = () => {
                     </td>
                     <td>{d.error_type}</td>
                     <td>
-                      <TextEllipsis>{d.daily_error || d.manual_error}</TextEllipsis>
+                      <TextEllipsis>{d.error}</TextEllipsis>
                     </td>
                     <td>
                       <Group spacing={4}>
