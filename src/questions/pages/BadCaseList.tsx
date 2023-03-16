@@ -49,7 +49,7 @@ const BadCaseList: React.FC = () => {
                 <th className="min-w-[200px]">Error Type</th>
                 <th className="min-w-[100px]">Error Message</th>
                 <th className="min-w-[140px]">Dayily Run Test</th>
-                <th className="min-w-[120px]">Manual Test</th>
+                <th className="min-w-[140px]">Manual Test</th>
                 <th className="min-w-[120px]">Model</th>
               </tr>
             </thead>
