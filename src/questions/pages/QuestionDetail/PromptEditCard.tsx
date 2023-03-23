@@ -29,10 +29,10 @@ const PromptEditCard: React.FC<{
         </Button>
       </Group>
       <Stack>
-        <Stack spacing="sm">
+        {/* <Stack spacing="sm">
           <Title order={6}>Description</Title>
           <DescriptionTable data={columns} />
-        </Stack>
+        </Stack> */}
         <Stack spacing="sm">
           <Title order={6}>Common Sense</Title>
           <EntityTable data={entities} />
