@@ -57,7 +57,7 @@ const DescriptionTable: React.FC<{ data: Column[] }> = ({ data }) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((element, i) => (
+        {data?.map((element, i) => (
           <tr key={i}>
             <td>{element.table}</td>
             <td>{element.column}</td>
@@ -80,7 +80,7 @@ const EntityTable: React.FC<{ data: EntityFormValue[] }> = ({ data }) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((element, i) => (
+        {data?.map((element, i) => (
           <tr key={i}>
             <td>{element.name}</td>
             <td>{element.desc}</td>
@@ -105,7 +105,7 @@ const ExampleTable: React.FC<{ data: ExampleFormValue[] }> = ({ data }) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((element, i) => (
+        {data?.map((element, i) => (
           <tr key={i}>
             <td>{element.Q}</td>
             <td>{element.A}</td>
@@ -147,9 +147,11 @@ export const CodeWithEdit: React.FC<{
 
   return (
     <div className="relative">
-      <Prism noCopy language="tsx">
-        {JSON.stringify(displayedData, null, '  ')}
-      </Prism>
+      {data && (
+        <Prism noCopy language="tsx">
+          {JSON.stringify(displayedData, null, '  ')}
+        </Prism>
+      )}
       {!!editable && (
         <Anchor className="absolute top-2 right-2" fz={14} onClick={() => openKBFormModal('edit', form)}>
           Edit

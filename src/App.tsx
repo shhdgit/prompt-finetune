@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import BadCaseList from './questions/pages/BadCaseList'
+import CaseList from './questions/pages/CaseList'
 import Overview from './overview/pages/Overview'
 import AppLayout from './shared/components/layout'
 import NoMatch from './shared/pages/NoMatch'
@@ -13,7 +13,7 @@ const App: React.FC = () => {
 
         <Route path="overview" element={<Overview />} />
         <Route path="question">
-          <Route path="badcase" element={<BadCaseList />} />
+          <Route index element={<CaseList />} />
           <Route path="detail" element={<QuestionDetail />} />
         </Route>
 

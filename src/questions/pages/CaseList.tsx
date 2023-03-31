@@ -1,33 +1,27 @@
 import useUrlState from '@ahooksjs/use-url-state'
-import { Alert, Anchor, Badge, Card, Group, ScrollArea, Skeleton, Stack, Table, Text, Tooltip } from '@mantine/core'
+import { ActionIcon, Alert, Badge, Card, Group, ScrollArea, Skeleton, Stack, Table, Text, Tooltip } from '@mantine/core'
 import { DatePickerInput } from '@mantine/dates'
-import { IconAlertCircle, IconExternalLink } from '@tabler/icons-react'
+import { IconAlertCircle, IconExternalLink, IconPlayerPlay } from '@tabler/icons-react'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
-import { PropsWithChildren, useMemo } from 'react'
-import { useQuery } from 'react-query'
+import { PropsWithChildren, useMemo, useState } from 'react'
+import { useMutation, useQuery } from 'react-query'
 import { NavLink } from 'react-router-dom'
-import { getQuestionList } from '../api'
+import { getQuestionList, executeQuestion } from '../api'
 
 dayjs.extend(utc)
 
 const yesterday = new Date()
-yesterday.setDate(yesterday.getDate() - 1)
+yesterday.setDate(yesterday.getDate())
 
-const BadCaseList: React.FC = () => {
+const CaseList: React.FC = () => {
   const [urlState, setUrlState] = useUrlState(() => {
     const d = new Date()
-    d.setDate(d.getDate() - 1)
+    d.setDate(d.getDate())
     return { date: dayjs(d).format('YYYY-MM-DD') }
   })
   const date = useMemo(() => dayjs(urlState.date).toDate(), [urlState.date])
   const { data, isLoading } = useQuery(['questionList', urlState.date], () => getQuestionList(urlState.date))
-  const badCaseData = useMemo(() => {
-    if (!data?.data) {
-      return []
-    }
-    return data.data.filter((d: any) => d.status !== 'success')
-  }, [data])
 
   return (
     <Card>
@@ -51,14 +45,14 @@ const BadCaseList: React.FC = () => {
                 <th className="min-w-[200px]">Question</th>
                 <th className="min-w-[200px]">Error Type</th>
                 <th className="min-w-[100px]">Error Message</th>
-                <th className="min-w-[140px]">Dayily Run Test</th>
-                <th className="min-w-[140px]">Manual Test</th>
+                <th className="min-w-[160px]">Dayily Run Test</th>
+                <th className="min-w-[160px]">Manual Test</th>
                 <th className="min-w-[120px]">Model</th>
               </tr>
             </thead>
             <tbody>
               {!isLoading ? (
-                badCaseData.map((d: any) => (
+                data?.data.map((d: any) => (
                   <tr key={d.id}>
                     <td>{dayjs(d.created_at).utc().format('YYYY-MM-DD hh:mm:ss')}</td>
                     <td>
@@ -82,9 +76,9 @@ const BadCaseList: React.FC = () => {
                             target="_blank"
                             className="no-underline"
                           >
-                            <Anchor component="span">
+                            <ActionIcon color="blue">
                               <IconExternalLink className="align-sub	" size={16} />
-                            </Anchor>
+                            </ActionIcon>
                           </NavLink>
                         )}
                       </Group>
@@ -97,16 +91,18 @@ const BadCaseList: React.FC = () => {
                         >
                           {d.manual_status || 'NA'}
                         </Badge>
-                        {!!d.manual_status && (
+                        {!!d.manual_status ? (
                           <NavLink
                             to={`/question/detail?id=${encodeURIComponent(d.id)}&type=manual`}
                             target="_blank"
                             className="no-underline"
                           >
-                            <Anchor component="span">
+                            <ActionIcon color="blue">
                               <IconExternalLink className="align-sub" size={16} />
-                            </Anchor>
+                            </ActionIcon>
                           </NavLink>
+                        ) : (
+                          <RunManual data={d} />
                         )}
                       </Group>
                     </td>
@@ -136,4 +132,42 @@ const TextEllipsis: React.FC<PropsWithChildren> = ({ children }) => {
   )
 }
 
-export default BadCaseList
+const RunManual: React.FC<{ data: any }> = ({ data }) => {
+  const [successed, setSuccessed] = useState(false)
+  const { isLoading, mutateAsync } = useMutation({
+    mutationKey: ['exec_manual_test', data.id],
+    mutationFn: () => executeQuestion(data.id)
+  })
+
+  return (
+    <ActionIcon
+      color="blue"
+      loading={isLoading}
+      onClick={async () => {
+        if (successed) {
+          window.open(
+            `${window.location.origin}${window.location.pathname}#/question/detail?id=${encodeURIComponent(
+              data.id
+            )}&type=manual`
+          )
+        }
+
+        const res = await mutateAsync()
+        setSuccessed(true)
+        window.open(
+          `${window.location.origin}${window.location.pathname}#/question/detail?id=${encodeURIComponent(
+            res.data.id
+          )}&type=manual`
+        )
+      }}
+    >
+      {successed ? (
+        <IconExternalLink className="align-sub	" size={16} />
+      ) : (
+        <IconPlayerPlay className="align-sub" size={16} />
+      )}
+    </ActionIcon>
+  )
+}
+
+export default CaseList

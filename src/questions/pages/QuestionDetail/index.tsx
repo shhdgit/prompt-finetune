@@ -43,7 +43,9 @@ const Detail: React.FC = () => {
                 try {
                   const res = await executeQuestion(id!)
                   window.open(
-                    `${window.location.origin}/#/question/detail?id=${encodeURIComponent(res.data.id)}&type=manual`
+                    `${window.location.origin}${window.location.pathname}#/question/detail?id=${encodeURIComponent(
+                      res.data.id
+                    )}&type=manual`
                   )
                 } finally {
                   setTesting(false)

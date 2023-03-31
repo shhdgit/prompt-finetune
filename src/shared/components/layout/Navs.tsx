@@ -55,8 +55,8 @@ const data: Link[] = [
   {
     icon: <IconZoomExclamation size="1rem" />,
     color: 'violet',
-    label: 'Bad Cases',
-    path: '/question/badcase'
+    label: 'Case List',
+    path: '/question'
   }
   // {
   //   icon: <IconReportMedical size="1rem" />,
